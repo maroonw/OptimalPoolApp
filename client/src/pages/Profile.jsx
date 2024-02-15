@@ -17,8 +17,11 @@ import {
   signOutUserStart,
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 export default function Profile() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fileRef = useRef(null);
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
@@ -28,7 +31,9 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
-  const dispatch = useDispatch();
+  
+
+
 
   // firebase storage
   // allow read;
@@ -37,10 +42,15 @@ export default function Profile() {
   // request.resource.contentType.matches('image/.*')
 
   useEffect(() => {
+    setFormData({
+      ...formData,
+      role: currentUser.role, // Initialize formData with the current user's role
+      // Include other user properties if needed
+    });
     if (file) {
       handleFileUpload(file);
     }
-  }, [file]);
+  }, [file, currentUser]); // Add currentUser to the dependency array
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -68,6 +78,10 @@ export default function Profile() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleChangeRole = (e) => {
+    setFormData({ ...formData, role: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -114,15 +128,16 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('/api/auth/signout');
+      const res = await fetch('/api/auth/signout', { method: 'POST' }); // Ensure this matches your backend method
       const data = await res.json();
       if (data.success === false) {
         dispatch(deleteUserFailure(data.message));
         return;
       }
       dispatch(deleteUserSuccess(data));
+      navigate('/'); // Redirect to home page
     } catch (error) {
-      dispatch(deleteUserFailure(data.message));
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -160,6 +175,7 @@ export default function Profile() {
       console.log(error.message);
     }
   };
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -213,6 +229,32 @@ export default function Profile() {
           id='password'
           className='border p-3 rounded-lg'
         />
+
+      {/* Conditionally render Role field */}
+      {currentUser.role === 'Admin' ? (
+        <select
+          id='role'
+          value={formData.role}
+          onChange={handleChangeRole}
+          className='border p-3 rounded-lg'
+        >
+          <option value='HomeOwner'>HomeOwner</option>
+          <option value='PoolProfessional'>PoolProfessional</option>
+          <option value='Admin'>Admin</option>
+        </select>
+      ) : (
+        <div className='border p-3 rounded-lg'>
+          <label htmlFor='role' className='font-semibold'>Role:</label>
+          <input
+            type='text'
+            id='role'
+            value={formData.role || currentUser.role}
+            className='ml-2 border-none bg-transparent'
+            readOnly
+          />
+        </div>
+      )}
+        
         <button
           disabled={loading}
           className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'
@@ -290,4 +332,4 @@ export default function Profile() {
       )}
     </div>
   );
-}
+          }
