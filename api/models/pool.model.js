@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const listingSchema = new mongoose.Schema(
+const poolSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -14,38 +14,24 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    regularPrice: {
-      type: Number,
-      required: true,
-    },
-    discountPrice: {
-      type: Number,
-      required: true,
-    },
-    bathrooms: {
-      type: Number,
-      required: true,
-    },
-    bedrooms: {
-      type: Number,
-      required: true,
-    },
-    furnished: {
-      type: Boolean,
-      required: true,
-    },
-    parking: {
-      type: Boolean,
+    size: {
+      type: String,
       required: true,
     },
     type: {
       type: String,
       required: true,
+      enum: ['Inground', 'Above Ground'], // Example values
     },
-    offer: {
+    saltwater: {
       type: Boolean,
       required: true,
     },
+    shape: {
+      type: String,
+      required: true,
+    },
+    // Add more pool-specific fields as needed
     imageUrls: {
       type: Array,
       required: true,
@@ -58,6 +44,6 @@ const listingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Listing = mongoose.model('Listing', listingSchema);
+const Pool = mongoose.model('Pool', poolSchema);
 
-export default Listing;
+export default Pool;

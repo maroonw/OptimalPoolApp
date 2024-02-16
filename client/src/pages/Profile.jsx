@@ -27,30 +27,22 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: currentUser.username || '',
+    email: currentUser.email || '',
+    role: currentUser.role || '',
+    avatar: currentUser.avatar || '',
+    // Add more user fields if needed
+  });
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [showListingsError, setShowListingsError] = useState(false);
-  const [userListings, setUserListings] = useState([]);
-  
-
-
-
-  // firebase storage
-  // allow read;
-  // allow write: if
-  // request.resource.size < 2 * 1024 * 1024 &&
-  // request.resource.contentType.matches('image/.*')
+  const [showPoolsError, setShowPoolsError] = useState(false);
+  const [userPools, setUserPools] = useState([]);
 
   useEffect(() => {
-    setFormData({
-      ...formData,
-      role: currentUser.role, // Initialize formData with the current user's role
-      // Include other user properties if needed
-    });
     if (file) {
       handleFileUpload(file);
     }
-  }, [file, currentUser]); // Add currentUser to the dependency array
+  }, [file]);
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -78,10 +70,6 @@ export default function Profile() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const handleChangeRole = (e) => {
-    setFormData({ ...formData, role: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -120,6 +108,7 @@ export default function Profile() {
         return;
       }
       dispatch(deleteUserSuccess(data));
+      navigate('/'); // Redirect to home page after deletion
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
     }
@@ -128,7 +117,7 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('/api/auth/signout', { method: 'POST' }); // Ensure this matches your backend method
+      const res = await fetch('/api/auth/signout', { method: 'POST' });
       const data = await res.json();
       if (data.success === false) {
         dispatch(deleteUserFailure(data.message));
@@ -141,25 +130,25 @@ export default function Profile() {
     }
   };
 
-  const handleShowListings = async () => {
+  const handleShowPools = async () => {
     try {
-      setShowListingsError(false);
-      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      setShowPoolsError(false);
+      const res = await fetch(`/api/user/pools/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
-        setShowListingsError(true);
+        setShowPoolsError(true);
         return;
       }
 
-      setUserListings(data);
+      setUserPools(data);
     } catch (error) {
-      setShowListingsError(true);
+      setShowPoolsError(true);
     }
   };
 
-  const handleListingDelete = async (listingId) => {
+  const handlePoolDelete = async (poolId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
+      const res = await fetch(`/api/pool/delete/${poolId}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -168,8 +157,8 @@ export default function Profile() {
         return;
       }
 
-      setUserListings((prev) =>
-        prev.filter((listing) => listing._id !== listingId)
+      setUserPools((prev) =>
+        prev.filter((pool) => pool._id !== poolId)
       );
     } catch (error) {
       console.log(error.message);
@@ -229,32 +218,6 @@ export default function Profile() {
           id='password'
           className='border p-3 rounded-lg'
         />
-
-      {/* Conditionally render Role field */}
-      {currentUser.role === 'Admin' ? (
-        <select
-          id='role'
-          value={formData.role}
-          onChange={handleChangeRole}
-          className='border p-3 rounded-lg'
-        >
-          <option value='HomeOwner'>HomeOwner</option>
-          <option value='PoolProfessional'>PoolProfessional</option>
-          <option value='Admin'>Admin</option>
-        </select>
-      ) : (
-        <div className='border p-3 rounded-lg'>
-          <label htmlFor='role' className='font-semibold'>Role:</label>
-          <input
-            type='text'
-            id='role'
-            value={formData.role || currentUser.role}
-            className='ml-2 border-none bg-transparent'
-            readOnly
-          />
-        </div>
-      )}
-        
         <button
           disabled={loading}
           className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'
@@ -263,9 +226,9 @@ export default function Profile() {
         </button>
         <Link
           className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
-          to={'/create-listing'}
+          to={'/create-pool'}
         >
-          Create Listing
+          Create Pool
         </Link>
       </form>
       <div className='flex justify-between mt-5'>
@@ -284,45 +247,45 @@ export default function Profile() {
       <p className='text-green-700 mt-5'>
         {updateSuccess ? 'User is updated successfully!' : ''}
       </p>
-      <button onClick={handleShowListings} className='text-green-700 w-full'>
-        Show Listings
+      <button onClick={handleShowPools} className='text-green-700 w-full'>
+        Show Pools
       </button>
       <p className='text-red-700 mt-5'>
-        {showListingsError ? 'Error showing listings' : ''}
+        {showPoolsError ? 'Error showing pools' : ''}
       </p>
 
-      {userListings && userListings.length > 0 && (
+      {userPools && userPools.length > 0 && (
         <div className='flex flex-col gap-4'>
           <h1 className='text-center mt-7 text-2xl font-semibold'>
-            Your Listings
+            Your Pools
           </h1>
-          {userListings.map((listing) => (
+          {userPools.map((pool) => (
             <div
-              key={listing._id}
+              key={pool._id}
               className='border rounded-lg p-3 flex justify-between items-center gap-4'
             >
-              <Link to={`/listing/${listing._id}`}>
+              <Link to={`/pool/${pool._id}`}>
                 <img
-                  src={listing.imageUrls[0]}
-                  alt='listing cover'
+                  src={pool.imageUrls[0]}
+                  alt='pool cover'
                   className='h-16 w-16 object-contain'
                 />
               </Link>
               <Link
                 className='text-slate-700 font-semibold  hover:underline truncate flex-1'
-                to={`/listing/${listing._id}`}
+                to={`/pool/${pool._id}`}
               >
-                <p>{listing.name}</p>
+                <p>{pool.name}</p>
               </Link>
 
               <div className='flex flex-col item-center'>
                 <button
-                  onClick={() => handleListingDelete(listing._id)}
+                  onClick={() => handlePoolDelete(pool._id)}
                   className='text-red-700 uppercase'
                 >
                   Delete
                 </button>
-                <Link to={`/update-listing/${listing._id}`}>
+                <Link to={`/update-pool/${pool._id}`}>
                   <button className='text-green-700 uppercase'>Edit</button>
                 </Link>
               </div>
@@ -332,4 +295,4 @@ export default function Profile() {
       )}
     </div>
   );
-          }
+}

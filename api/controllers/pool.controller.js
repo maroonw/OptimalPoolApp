@@ -1,68 +1,68 @@
-import Listing from '../models/listing.model.js';
+import Pool from '../models/pool.model.js';
 import { errorHandler } from '../utils/error.js';
 
-export const createListing = async (req, res, next) => {
+export const createPool = async (req, res, next) => {
   try {
-    const listing = await Listing.create(req.body);
-    return res.status(201).json(listing);
+    const newPool = await Pool.create(req.body);
+    return res.status(201).json(newPool);
   } catch (error) {
     next(error);
   }
 };
 
-export const deleteListing = async (req, res, next) => {
-  const listing = await Listing.findById(req.params.id);
+export const deletePool = async (req, res, next) => {
+  const existingPool = await Pool.findById(req.params.id);
 
-  if (!listing) {
-    return next(errorHandler(404, 'Listing not found!'));
+  if (!existingPool) {
+    return next(errorHandler(404, 'Pool not found!'));
   }
 
-  if (req.user.id !== listing.userRef) {
-    return next(errorHandler(401, 'You can only delete your own listings!'));
+  if (req.user.id !== existingPool.userRef) {
+    return next(errorHandler(401, 'You can only delete your own pools!'));
   }
 
   try {
-    await Listing.findByIdAndDelete(req.params.id);
-    res.status(200).json('Listing has been deleted!');
+    await Pool.findByIdAndDelete(req.params.id);
+    res.status(200).json('Pool has been deleted!');
   } catch (error) {
     next(error);
   }
 };
 
-export const updateListing = async (req, res, next) => {
-  const listing = await Listing.findById(req.params.id);
-  if (!listing) {
-    return next(errorHandler(404, 'Listing not found!'));
+export const updatePool = async (req, res, next) => {
+  const existingPool = await Pool.findById(req.params.id);
+  if (!existingPool) {
+    return next(errorHandler(404, 'Pool not found!'));
   }
-  if (req.user.id !== listing.userRef) {
-    return next(errorHandler(401, 'You can only update your own listings!'));
+  if (req.user.id !== existingPool.userRef) {
+    return next(errorHandler(401, 'You can only update your own pools!'));
   }
 
   try {
-    const updatedListing = await Listing.findByIdAndUpdate(
+    const updatedPool = await Pool.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-    res.status(200).json(updatedListing);
+    res.status(200).json(updatedPool);
   } catch (error) {
     next(error);
   }
 };
 
-export const getListing = async (req, res, next) => {
+export const getPool = async (req, res, next) => {
   try {
-    const listing = await Listing.findById(req.params.id);
-    if (!listing) {
-      return next(errorHandler(404, 'Listing not found!'));
+    const existingPool = await Pool.findById(req.params.id);
+    if (!existingPool) {
+      return next(errorHandler(404, 'Pool not found!'));
     }
-    res.status(200).json(listing);
+    res.status(200).json(existingPool);
   } catch (error) {
     next(error);
   }
 };
 
-export const getListings = async (req, res, next) => {
+export const getPools = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 9;
     const startIndex = parseInt(req.query.startIndex) || 0;
@@ -96,7 +96,7 @@ export const getListings = async (req, res, next) => {
 
     const order = req.query.order || 'desc';
 
-    const listings = await Listing.find({
+    const pools = await Pool.find({
       name: { $regex: searchTerm, $options: 'i' },
       offer,
       furnished,
@@ -107,7 +107,7 @@ export const getListings = async (req, res, next) => {
       .limit(limit)
       .skip(startIndex);
 
-    return res.status(200).json(listings);
+    return res.status(200).json(pools);
   } catch (error) {
     next(error);
   }

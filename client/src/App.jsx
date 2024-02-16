@@ -6,13 +6,12 @@ import About from './pages/About';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
-import CreateListing from './pages/CreateListing';
-import UpdateListing from './pages/UpdateListing';
-import Listing from './pages/Listing';
+import CreatePool from './pages/CreatePool'; // Renamed from CreateListing
+import UpdatePool from './pages/UpdatePool'; // Renamed from UpdateListing
+import Pool from './pages/Pool'; // Renamed from Listing
 import Search from './pages/Search';
 
-
-import Unathorized from './pages/Unathorized';
+import Unauthorized from './pages/Unathorized'; // Fixed typo
 
 import PoolSideLounge from './pages/PoolSideLounge';
 import LinkPage from './pages/LinkPage';
@@ -36,43 +35,36 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/about' element={<About />} />
         <Route path='/search' element={<Search />} />
-        <Route path='/listing/:listingId' element={<Listing />} />
+        <Route path='/pool/:poolId' element={<Pool />} /> // Updated from /listing/:listingId
         <Route path='/link-page' element={<LinkPage />} />
-        <Route path='/unathorized' element={<Unathorized />} />
+        <Route path='/unauthorized' element={<Unauthorized />} /> // Updated path
 
         {/* Private routes common for all logged-in users */}
         <Route element={<PrivateRoute allowedRoles={['HomeOwner', 'PoolProfessional', 'Admin']} />}>
           <Route path='/profile' element={<Profile />} />
-          <Route path='/create-listing' element={<CreateListing />} />
-          <Route path='/update-listing/:listingId' element={<UpdateListing />} />
+          <Route path='/create-pool' element={<CreatePool />} /> // Renamed from /create-listing
+          <Route path='/update-pool/:poolId' element={<UpdatePool />} /> // Renamed from /update-listing/:listingId
           <Route path='/pool-side-lounge' element={<PoolSideLounge />} />
         </Route>
 
         {/* Private routes for specific roles */}
         {/* HomeOwner-specific routes */}
         <Route element={<PrivateRoute allowedRoles={['HomeOwner']} />}>
-          {/* HomeOwner-specific components here */}
           <Route path='/homeowner/homeownerdashboard' element={<HomeownerDashboard />} />
           <Route path='/homeowner/chemicaltracker' element={<ChemicalTracker />} />
           <Route path='/homeowner/cleaningschedule' element={<CleaningSchedule />} />
-
         </Route>
 
         {/* PoolProfessional-specific routes */}
         <Route element={<PrivateRoute allowedRoles={['PoolProfessional']} />}>
-          {/* PoolProfessional-specific components here */}
           <Route path='/professional/professionaldashboard' element={<ProfessionalDashboard />} />
         </Route>
 
         {/* Admin-specific routes */}
         <Route element={<PrivateRoute allowedRoles={['Admin']} />}>
-          {/* Admin-specific components here */}
           <Route path='/admin/admindashboard' element={<AdminDashboard />} />
         </Route>
-
       </Routes>
-
-
     </BrowserRouter>
   );
 }
