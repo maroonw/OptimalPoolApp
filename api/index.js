@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
-import poolRouter from './routes/Pool.route.js'; // Updated from listingRouter
+import poolRouter from './routes/pool.route.js'; // Updated from listingRouter
 import cookieParser from 'cookie-parser';
 import path from 'path';
 dotenv.config();
