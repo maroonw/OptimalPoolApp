@@ -55,10 +55,45 @@ export default function Home() {
 
       {/* swiper */}
       <Swiper navigation>
-        {/* Swiper slides for offerPools */}
-      </Swiper>
+  {offerPools.map((pool) => (
+    <SwiperSlide key={pool._id}>
+      {/* Content for each pool, e.g., an image, name, price, etc. */}
+    </SwiperSlide>
+  ))}
+</Swiper>
 
-      {/* Pool results for offer, sale, and rent */}
+<div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
+  {/* Offer Pools */}
+  <div>
+    <h2>Special Offers</h2>
+    <div className='flex flex-wrap gap-4'>
+      {offerPools.map((pool) => (
+        <PoolItem key={pool._id} pool={pool} />
+      ))}
+    </div>
+  </div>
+
+  {/* Rent Pools */}
+  <div>
+    <h2>Pools for Rent</h2>
+    <div className='flex flex-wrap gap-4'>
+      {rentPools.map((pool) => (
+        <PoolItem key={pool._id} pool={pool} />
+      ))}
+    </div>
+  </div>
+
+  {/* Sale Pools */}
+  <div>
+    <h2>Pools for Sale</h2>
+    <div className='flex flex-wrap gap-4'>
+      {salePools.map((pool) => (
+        <PoolItem key={pool._id} pool={pool} />
+      ))}
+    </div>
+  </div>
+</div>
+
 
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {/* Display pools in each category using PoolItem components */}

@@ -32,6 +32,7 @@ export default function Header() {
               <Link to='/homeowner/homeownerdashboard' className="text-slate-700 hover:underline">Dashboard</Link>
               <Link to='/homeowner/chemicaltracker' className="text-slate-700 hover:underline">Chemical Tracker</Link>
               <Link to='/homeowner/cleaningschedule' className="text-slate-700 hover:underline">Cleaning Schedule</Link>
+              <Link to='/pool-side-lounge' className="text-slate-700 hover:underline">Poolside Lounge</Link>
               {/* Add more HomeOwner-specific links */}
             </>
           );
@@ -39,6 +40,7 @@ export default function Header() {
           return (
             <>
               <Link to='/professional/professionaldashboard' className="text-slate-700 hover:underline">Dashboard</Link>
+              <Link to='/pool-side-lounge' className="text-slate-700 hover:underline">Poolside Lounge</Link>
               {/* Add more PoolProfessional-specific links */}
             </>
           );
@@ -46,6 +48,7 @@ export default function Header() {
           return (
             <>
               <Link to='/admin/admindashboard' className="text-slate-700 hover:underline">Dashboard</Link>
+              <Link to='/pool-side-lounge' className="text-slate-700 hover:underline">Poolside Lounge</Link>
               {/* Add more Admin-specific links */}
             </>
           );

@@ -1,0 +1,68 @@
+.pool-side-lounge {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light grey background */
+  }
+  
+  .category {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  .category:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hover effect */
+  }
+  
+  .category-title h2 {
+    margin: 0;
+    color: #007bff; /* Blue color */
+    text-decoration: none;
+  }
+  
+  .category-title p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .top-threads {
+    margin-top: 10px;
+  }
+  
+  .thread {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  
+  .thread a {
+    text-decoration: none;
+    color: #ff7f50; /* Orange color */
+  }
+  
+  .thread a:hover {
+    text-decoration: underline; /* Hover effect */
+  }
+  
+  .thread span {
+    color: #666;
+  }
+  
+  .new-thread-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .new-thread-button:hover {
+    background-color: #0056b3;
+  }
+  

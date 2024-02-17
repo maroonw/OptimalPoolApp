@@ -6,14 +6,17 @@ import About from './pages/About';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
-import CreatePool from './pages/CreatePool'; // Renamed from CreateListing
-import UpdatePool from './pages/UpdatePool'; // Renamed from UpdateListing
-import Pool from './pages/Pool'; // Renamed from Listing
+import CreatePool from './pages/CreatePool';
+import UpdatePool from './pages/UpdatePool';
+import Pool from './pages/Pool';
 import Search from './pages/Search';
 
-import Unauthorized from './pages/Unathorized'; // Fixed typo
-
 import PoolSideLounge from './pages/PoolSideLounge';
+import CategoryPage from './pages/CategoryPage';
+import ThreadPage from './pages/ThreadPage';
+import NewThreadPage from './pages/NewThreadPage';
+
+import Unauthorized from './pages/Unathorized';
 import LinkPage from './pages/LinkPage';
 
 import HomeownerDashboard from './pages/homeowner/HomeownerDashboard';
@@ -35,16 +38,19 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/about' element={<About />} />
         <Route path='/search' element={<Search />} />
-        <Route path='/pool/:poolId' element={<Pool />} /> // Updated from /listing/:listingId
-        <Route path='/link-page' element={<LinkPage />} />
-        <Route path='/unauthorized' element={<Unauthorized />} /> // Updated path
+        <Route path='/pool/:poolId' element={<Pool />} />
+        <Route path='/link/:linkId' element={<LinkPage />} />
+        <Route path='/unauthorized' element={<Unauthorized />} />
 
         {/* Private routes common for all logged-in users */}
         <Route element={<PrivateRoute allowedRoles={['HomeOwner', 'PoolProfessional', 'Admin']} />}>
           <Route path='/profile' element={<Profile />} />
-          <Route path='/create-pool' element={<CreatePool />} /> // Renamed from /create-listing
-          <Route path='/update-pool/:poolId' element={<UpdatePool />} /> // Renamed from /update-listing/:listingId
+          <Route path='/create-pool' element={<CreatePool />} />
+          <Route path='/update-pool/:poolId' element={<UpdatePool />} />
           <Route path='/pool-side-lounge' element={<PoolSideLounge />} />
+          <Route path='/pool-side-lounge/category/:categoryId' element={<CategoryPage />} />
+          <Route path= 'pool-side-lounge/thread/:threadId' element={<ThreadPage />} />
+          <Route path='/pool-side-lounge/category/:categoryId/new-thread' element={<NewThreadPage />} />
         </Route>
 
         {/* Private routes for specific roles */}
@@ -68,3 +74,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
